@@ -2,4 +2,9 @@
   "name": "jenkins-phantomas",
   "version": "0.0.0",
   "description": "Phantomas integration with Jenkins CI server",
+  "bin": {
+    "phantomas-job": "./bin/phantomas-job",
+    "phantomas-run": "./bin/phantomas-run",
+    "phantomas-format": "./bin/phantomas-format"
+  }
 }
