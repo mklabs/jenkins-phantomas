@@ -14,4 +14,5 @@ JENKINS_JOBNAME=${JENKINS_JOBNAME:="phantomas-job"}
 # Install plugins
 # $ curl -X POST -H 'Content-Type: application/xml' $JEKINS_URL/pluginManager/installNecessaryPlugins --data-binary @config.xml
 
+echo "Creates $JENKINS_JOBNAME job for $JENKINS_URL server"
 curl -X POST -H 'Content-Type: application/xml' "$JENKINS_URL/createItem?name=$JENKINS_JOBNAME" --data-binary @config.xml

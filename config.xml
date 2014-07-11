@@ -20,7 +20,7 @@
         <hudson.model.StringParameterDefinition>
           <name>JSON_CONFIG</name>
           <description>Phantomas JSON config.</description>
-          <defaultValue>{&quot;no-externals&quot;:false,&quot;allow-domain&quot;:&quot;.kk-data.com&quot;,&quot;asserts&quot;:{}}</defaultValue>
+          <defaultValue>{&quot;no-externals&quot;:false,&quot;allow-domain&quot;:&quot;.my-cdn.com&quot;,&quot;asserts&quot;:{}}</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>

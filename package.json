@@ -6,5 +6,8 @@
     "phantomas-job": "./bin/phantomas-job",
     "phantomas-run": "./bin/phantomas-run",
     "phantomas-format": "./bin/phantomas-format"
+  },
+  "dependencies": {
+    "phantomas": "~1.4.0"
   }
 }

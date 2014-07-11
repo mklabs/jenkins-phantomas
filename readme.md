@@ -21,7 +21,7 @@ Creates a new job on remote Jenkins, with name `phantomas-job based on
 - `JENKINS_URL` Jenkins root URL
 - `JENKINS_JOBNAME` The name of the job to create
 
-Created jobs expects the following plugins to be installed:
+Created jobs expect the following plugins to be installed:
 
 - Tap plugin: https://wiki.jenkins-ci.org/display/JENKINS/TAP+Plugin
 - Parameterized trigger plugin: https://wiki.jenkins-ci.org/display/JENKINS/Parameterized+Trigger+Plugin
