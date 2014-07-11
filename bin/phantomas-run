@@ -1,0 +1,65 @@
+#!/bin/bash
+
+URLS="$PERF_URLS"
+
+RESULT_DIR="results/$BUILD_NUMBER"
+
+
+echo """
+
+URLs: $URLS
+
+JSON Configuration:
+
+$JSON_CONFIG
+
+"""
+
+echo "$JSON_CONFIG" > config.json
+
+for url in $URLS; do
+
+  # Define URL key for I/O and Metric keys
+  URL_KEY=$(node -pe "process.argv.slice(1)[0].replace(/(^https?:\/\/)|(\/$)/g, '').replace(/(\/|\?|-|&|=|\.)/g, '_')" $url);
+  URL_DIR=$RESULT_DIR/$URL_KEY
+
+  echo """
+
+  URL - $url
+  Key - $URL_KEY
+  Dir - $URL_DIR
+
+  """
+
+  mkdir -p $URL_DIR
+
+  # echoing to user
+  echo ./node_modules/.bin/phantomas $url \
+    --skip-modules=staticAssets \
+    --reporter json \
+    --config ./config.json \
+    --screenshot $URL_DIR/screenshot.png \
+    --har $URL_DIR/har.json \
+    --film-strip --film-strip-dir $URL_DIR/filmstrip
+
+  echo ""
+
+  # actual run
+  ./node_modules/.bin/phantomas $url \
+    --skip-modules=staticAssets \
+    --reporter json \
+    --config ./config.json \
+    --screenshot $URL_DIR/screenshot.png \
+    --har $URL_DIR/har.json \
+    --film-strip --film-strip-dir $URL_DIR/filmstrip \
+    > $URL_DIR/build.json
+
+
+  cat $URL_DIR/build.json
+  echo ""
+
+  cd $RESULT_DIR && find -type f  > files.txt
+  cd $WORKSPACE
+done
+
+rm config.json

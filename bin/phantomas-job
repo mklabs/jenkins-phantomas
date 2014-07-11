@@ -1,0 +1,17 @@
+#/bin/bash
+#
+# Creates a Job with config.xml templates
+
+JENKINS_URL=${JENKINS_URL:="http://192.168.33.12:8080/jenkins"}
+JENKINS_JOBNAME=${JENKINS_JOBNAME:="phantomas-job"}
+
+# Job creation
+# $ curl -X POST -H 'Content-Type: application/xml' $JEKINS_URL/createItem --data-binary @config.xml
+
+# Check plugins
+# $ curl -X POST -H 'Content-Type: application/xml' $JEKINS_URL/pluginManager/prevalidateConfig --data-binary @config.xml
+
+# Install plugins
+# $ curl -X POST -H 'Content-Type: application/xml' $JEKINS_URL/pluginManager/installNecessaryPlugins --data-binary @config.xml
+
+curl -X POST -H 'Content-Type: application/xml' "$JENKINS_URL/createItem?name=$JENKINS_JOBNAME" --data-binary @config.xml

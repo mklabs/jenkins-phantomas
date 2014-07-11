@@ -1,0 +1,5 @@
+{
+  "name": "jenkins-phantomas",
+  "version": "0.0.0",
+  "description": "Phantomas integration with Jenkins CI server",
+}

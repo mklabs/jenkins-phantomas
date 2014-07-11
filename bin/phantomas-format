@@ -1,0 +1,65 @@
+#!/bin/env node
+
+var env = process.env;
+
+var fs = require('fs');
+var path = require('path');
+var exists = fs.existsSync;
+
+var phantomas = requireWS('phantomas');
+var phantomasResults = requireWS('phantomas/core/results');
+var loadReporter = requireWS('phantomas/core/reporter');
+
+
+var buildNumber = env.BUILD_NUMBER || env.TRAVIS_BUILD_NUMBER || 'last';
+var dirname = path.resolve(env.WORKSPACE || '', 'results', buildNumber);
+
+console.log('Result dir:', dirname);
+var results = fs.readdirSync(dirname).map(function(dir) {
+  if (fs.statSync(path.join(dirname, dir)).isFile()) return;
+  console.log('Dealing with results %s dir', dir);
+  var data = {};
+
+  try {
+    data = require(path.join(dirname, dir, 'build.json'));
+  } catch(e) {
+    console.error('Error loading build.json', dirname, dir);
+    return;
+  }
+
+
+  data._asserts = data.asserts;
+  data.asserts = data.asserts.rules;
+
+  var results = phantomasResults(data);
+  var reporter = loadReporter(results, {
+    reporter: 'tap'
+  });
+
+  // pass a function that reporter should call once done
+  var res = reporter.render(function() {});
+
+  // Both in result dir
+  var filename = path.resolve(dirname, dir, 'build.tap');
+  console.log('Writing TAP results to %s file', filename);
+
+  // And root workspace for tap publish
+  filename = path.resolve(env.WORKSPACE || '', dir + '.tap');
+  console.log('Writing TAP results to %s file', filename);
+  fs.writeFileSync(filename, res);
+
+  // Used by statsd-send to build the metric key
+  data.prefix = dir;
+
+  return data;
+});
+
+// All build info, to pass along downstream jobs
+var filename = path.resolve(env.WORKSPACE || '', 'build.json');
+console.log('Writing build JSON results to %s file', filename);
+fs.writeFileSync(filename, JSON.stringify(results));
+
+
+function requireWS(file) {
+  return require(env.WORKSPACE ? path.join(env.WORKSPACE, 'node_modules', file) : file);
+}
