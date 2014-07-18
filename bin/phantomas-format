@@ -1,4 +1,4 @@
-#!/bin/env node
+#!/usr/bin/env node
 
 var env = process.env;
 
@@ -6,9 +6,9 @@ var fs = require('fs');
 var path = require('path');
 var exists = fs.existsSync;
 
-var phantomas = requireWS('jenkins-phantomas/node_modules/phantomas');
-var phantomasResults = requireWS('jenkins-phantomas/node_modules/phantomas/core/results');
-var loadReporter = requireWS('jenkins-phantomas/node_modules/phantomas/core/reporter');
+var phantomas = requireWS('phantomas');
+var phantomasResults = requireWS('phantomas/core/results');
+var loadReporter = requireWS('phantomas/core/reporter');
 
 
 var buildNumber = env.BUILD_NUMBER || env.TRAVIS_BUILD_NUMBER || 'last';

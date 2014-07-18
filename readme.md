@@ -15,7 +15,7 @@ Options and configurable parts are all set with environment variables.
 
     $ JENKINS_URL="http://192.168.33.12:8080" JENKINS_JOBNAME="phantomas-job" node_modules/.bin/phantomas-job
 
-Creates a new job on remote Jenkins, with name `phantomas-job based on
+Creates a new job on remote Jenkins, with name `phantomas-job` based on
 `config.xml` job template.
 
 - `JENKINS_URL` Jenkins root URL

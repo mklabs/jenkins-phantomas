@@ -1,0 +1,88 @@
+#!/usr/bin/env node
+
+var fs    = require('fs');
+var glob  = require('glob');
+var path  = require('path');
+var hogan = require('hogan.js');
+var ncp   = require('ncp');
+
+var read = fs.readFileSync;
+var exists = fs.existsSync;
+
+// Basedir is first script argument
+var argv = process.argv.slice(2);
+var basedir = argv[0];
+
+var template = hogan.compile(read(path.join(__dirname, '../templates/build.html'), 'utf8'));
+
+var urls = fs.readdirSync(basedir).filter(function(file) {
+  return fs.statSync(path.join(basedir, file)).isDirectory();
+});
+
+console.error('Generate reports for', urls);
+
+var data = {};
+data.urls = urls.map(function(url) {
+  console.error('Generate report for', url);
+  return buildDataForUrl(basedir, url);
+});
+
+// Generate HTML for basedir
+var html = template.render(data);
+var output = path.join(basedir, 'index.html');
+console.error('Writing file to', output);
+fs.writeFileSync(output, html);
+
+// Copy over harviewer files
+var harviewer = path.join(__dirname, '../templates/harviewer-2.0-15');
+ncp(harviewer, path.join(basedir, '../harviewer-2.0-15'), function(err) {
+  if (err) throw err;
+  console.error('file copied');
+});
+
+// Generate data per url directory
+function buildDataForUrl(dir, url) {
+  var buildNumber = path.basename(dir);
+  var basedir = path.join(dir, url);
+
+  if (!exists(basedir)) throw new Error('Basedir mandatory param missing');
+  if (!exists(path.join(basedir, 'build.json'))) throw new Error('Basedir mandatory build.json missing');
+  if (!exists(path.join(basedir, 'har.json'))) throw new Error('Basedir mandatory har.json missing');
+  if (!exists(path.join(basedir, 'filmstrip'))) throw new Error('Basedir mandatory filmstrip directory missing');
+
+  var data = {};
+
+  var files = glob.sync(path.join(basedir, '**'));
+  var buildjson = require(path.resolve(basedir, 'build.json'));
+  var harjson = require(path.resolve(basedir, 'har.json'));
+
+  // Screenshots building
+  var screenshots = files.filter(function(file) {
+    return path.extname(file) === '.png' && file.indexOf('filmstrip') !== -1;
+  }).map(function(file) {
+    var filename = path.basename(file);
+    var fileurl = path.join(url, 'filmstrip', filename);
+
+    return {
+      file: file,
+      time: filename.replace(/\.png$/, '').split('-').slice(-1)[0],
+      thumbnail: fileurl,
+      url: fileurl
+    };
+  }).sort(function(a, b) {
+    if (a.time === b.time) return 0;
+    return a.time < b.time ? -1 : 1;
+  });
+
+  data.screenshots = screenshots;
+  data.url = path.basename(basedir);
+  data.jenkinsFilmstripDir = path.join(url, 'filmstrip');
+  data.jenkinsHar = path.join(url, 'har.json');
+  data.localHar = '../' + path.join(buildNumber, url, 'har.json');
+
+  // console.error(files);
+  // console.error(screenshots);
+  // console.error(data);
+
+  return data;
+}

@@ -5,9 +5,19 @@
   "bin": {
     "phantomas-job": "./bin/phantomas-job",
     "phantomas-run": "./bin/phantomas-run",
-    "phantomas-format": "./bin/phantomas-format"
+    "phantomas-format": "./bin/phantomas-format",
+    "phantomas-html": "./bin/phantomas-html"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "devDependencies": {
+    "phantomas": "~1.4.0",
+    "serve": "~1.4.0"
   },
   "dependencies": {
-    "phantomas": "~1.4.0"
+    "glob": "~4.0.4",
+    "hogan.js": "~3.0.2",
+    "ncp": "~0.6.0"
   }
 }

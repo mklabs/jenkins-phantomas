@@ -39,13 +39,16 @@
   <builders>
     <hudson.tasks.Shell>
       <command>echo &quot;{}&quot; &gt; package.json
-[ -e node_modules ] || npm install mklabs/jenkins-phantomas</command>
+[ -e node_modules ] || npm install phantomas mklabs/jenkins-phantomas</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command>./node_modules/.bin/phantomas-run</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command>./node_modules/.bin/phantomas-format</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>./node_modules/.bin/phantomas-html ./results/$BUILD_NUMBER</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

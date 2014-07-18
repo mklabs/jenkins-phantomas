@@ -34,7 +34,7 @@ for url in $URLS; do
   mkdir -p $URL_DIR
 
   # echoing to user
-  echo ./node_modules/jenkins-phantomas/node_modules/.bin/phantomas $url \
+  echo ./node_modules/.bin/phantomas $url \
     --skip-modules=staticAssets \
     --reporter json \
     --config ./config.json \
@@ -45,7 +45,8 @@ for url in $URLS; do
   echo ""
 
   # actual run
-  ./node_modules/jenkins-phantomas/node_modules/.bin/phantomas $url \
+  # ./node_modules/jenkins-phantomas/node_modules/.bin/phantomas $url \
+  ./node_modules/.bin/phantomas $url \
     --skip-modules=staticAssets \
     --reporter json \
     --config ./config.json \
