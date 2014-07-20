@@ -78,7 +78,9 @@ function buildDataForUrl(dir, url) {
   data.url = path.basename(basedir);
   data.jenkinsFilmstripDir = path.join(url, 'filmstrip');
   data.jenkinsHar = path.join(url, 'har.json');
-  data.localHar = '../' + path.join(buildNumber, url, 'har.json');
+
+  // Use env variable if any, otherwise fallback to relative path
+  data.localHar = (env.JOB_URL ? path.join(env.JOB_URL, 'results') : '../') + path.join(buildNumber, url, 'har.json');
 
   // console.error(files);
   // console.error(screenshots);
