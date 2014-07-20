@@ -80,7 +80,7 @@ function buildDataForUrl(dir, url) {
   data.jenkinsHar = path.join(url, 'har.json');
 
   // Use env variable if any, otherwise fallback to relative path
-  data.localHar = (env.JOB_URL ? path.join(env.JOB_URL, 'results') : '../') + path.join(buildNumber, url, 'har.json');
+  data.localHar = (process.env.JOB_URL ? path.join(process.env.JOB_URL, 'ws/results') : '../') + path.join(buildNumber, url, 'har.json');
 
   // console.error(files);
   // console.error(screenshots);
