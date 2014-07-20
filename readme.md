@@ -39,3 +39,14 @@ generating JSON results.
 
 Aggregates JSON results into a single JSON file (array of JSON results)
 for downstream jobs to consume.
+
+### phantomas-html
+
+    $ ./node_modules/.bin/phantomas-html ./results/$BUILD_NUMBER
+
+Lookups build results directory for screenshots and HAR file. Generates
+an `index.html` file with filmstrip screenshots and HAR using
+[har-viewer](http://www.softwareishard.com/har/viewer/)
+
+HTML file generated in `./results/$BUILD_NUMBER`. harviewer files and
+application are copied to `./results/harviewer`.
