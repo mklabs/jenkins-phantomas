@@ -50,6 +50,9 @@
     <hudson.tasks.Shell>
       <command>./node_modules/.bin/phantomas-html ./results/$BUILD_NUMBER</command>
     </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>./node_modules/.bin/phantomas-metrics ./metrics.json</command>
+    </hudson.tasks.Shell>
   </builders>
   <publishers>
     <org.tap4j.plugin.TapPublisher plugin="tap@1.18">

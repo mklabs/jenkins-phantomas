@@ -62,5 +62,3 @@ for url in $URLS; do
   cd $RESULT_DIR && find -type f  > files.txt
   cd $WORKSPACE
 done
-
-rm config.json

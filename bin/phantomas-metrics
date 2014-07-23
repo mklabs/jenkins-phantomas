@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+
+// Script to generate metrics.json file for highcharts views
+
+var fs    = require('fs');
+var glob  = require('glob');
+var path  = require('path');
+var hogan = require('hogan.js');
+var ncp   = require('ncp');
+
+var read = fs.readFileSync;
+var exists = fs.existsSync;
+
+var args = process.argv.slice(2);
+var metricFile = args[0] || 'metrics.json';
+
+if (!exists('./build.json')) throw new Error('Missing build.json file. Please, run phantomas-format before');
+
+var buildMetrics = require(path.resolve('./build.json')).filter(function(metrics) {
+  // Filters out null data
+  return metrics;
+});
+
+var metrics = exists(metricFile) ? require(path.resolve(metricFile)) : {};
+
+var results = {};
+
+// Build xaxis & series for each metrics in buildMetrics
+var keys = Object.keys(buildMetrics[0].metrics);
+
+keys.forEach(function(key) {
+  console.log('Build %s metric data', key);
+  var data = metrics[key] || {};
+  console.log('Existing data', data);
+
+  var xaxis = data.xaxis || [];
+  var series = data.series || [];
+
+  // Adds a new xaxis with timestamp
+  xaxis.push(Date.now());
+
+  // And metrics for each URL
+  buildMetrics.forEach(function(buildMetric) {
+    var url = buildMetric.url;
+
+    var serie = series.filter(function(serie) {
+      return serie.name === url;
+    })[0];
+
+    if (!serie) {
+      serie = {};
+      series.push(serie);
+    }
+
+    var serieData = serie.data || [];
+    var value = buildMetric.metrics[key];
+
+    if (typeof value === 'undefined') return;
+
+    // Push the new metric
+    serieData.push(value);
+    console.log('Pushing value %s for key %s in %s', value, key, serieData);
+
+    serie.data = serieData;
+    serie.name = url;
+    console.log(serie);
+  });
+
+
+  data.xaxis = xaxis;
+  data.series = series;
+  results[key] = data;
+});
+
+// Writes metric down to ./metrics.json
+console.log('Writing results to %s with', metricFile, results);
+fs.writeFileSync(metricFile, JSON.stringify(results));
+
+// And build metrics.html
+
+var templateData = Object.keys(results).map(function(key) {
+  return {
+    target: key,
+    data: results[key],
+    json: JSON.stringify(results[key])
+  };
+});
+
+var template = hogan.compile(read(path.join(__dirname, '../templates/job.html'), 'utf8'));
+var html = template.render({
+  metrics: templateData
+});
+
+console.log(html, templateData);
+fs.writeFileSync('./metrics.html', html);

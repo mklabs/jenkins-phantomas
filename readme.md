@@ -50,3 +50,10 @@ an `index.html` file with filmstrip screenshots and HAR using
 
 HTML file generated in `./results/$BUILD_NUMBER`. harviewer files and
 application are copied to `./results/harviewer`.
+
+### phantomas-metrics
+
+    $ ./node_modules/.bin/phantomas-metrics ./metrics.json
+
+Generates `metrics.json` file, data per metrics / url and `metrics.html`
+file to show graph for each metric. Uses highcharts and bootstrap.

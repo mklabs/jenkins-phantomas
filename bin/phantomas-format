@@ -51,6 +51,8 @@ var results = fs.readdirSync(dirname).map(function(dir) {
   // Used by statsd-send to build the metric key
   data.prefix = dir;
 
+  data.timestamp = Date.now();
+
   return data;
 });
 
@@ -58,7 +60,6 @@ var results = fs.readdirSync(dirname).map(function(dir) {
 var filename = path.resolve(env.WORKSPACE || '', 'build.json');
 console.log('Writing build JSON results to %s file', filename);
 fs.writeFileSync(filename, JSON.stringify(results));
-
 
 function requireWS(file) {
   return require(env.WORKSPACE ? path.join(env.WORKSPACE, 'node_modules', file) : file);
